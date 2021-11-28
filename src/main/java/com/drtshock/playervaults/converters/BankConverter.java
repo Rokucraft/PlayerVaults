@@ -6,6 +6,7 @@ import com.google.gson.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -20,11 +21,24 @@ import java.util.*;
 public class BankConverter implements Converter {
 
     Connection connection = null;
-    String dbFileName = "database.db";
+    static final String dbFileName = "database.db";
     PlayerVaults plugin = null;
+
+    static final String[] testedBankVersions = {"4.3.0-RELEASE"};
+    String conversionNotRecommendedMsg = null;
+    boolean overrideFurtherVersionChecks = false;
 
     @Override
     public int run(CommandSender initiator) {
+        if (conversionNotRecommendedMsg != null) {
+            if (initiator != null)
+                initiator.sendMessage(conversionNotRecommendedMsg);
+
+            conversionNotRecommendedMsg = null;
+            overrideFurtherVersionChecks = true;
+            return -1;
+        }
+
         if (plugin == null)
             plugin = PlayerVaults.getInstance();
 
@@ -139,8 +153,14 @@ public class BankConverter implements Converter {
         return true;
     }
 
+    /**
+     * If the Bank plugin version check fails or cannot be performed, canConvert() returns true and requires the user to confirm their intention to proceed by replacing the next execution of run() with printing a warning. After the next execution of run(), this check is disabled.
+     */
     @Override
     public boolean canConvert() {
+        //noinspection ConstantConditions
+        assert(testedBankVersions.length > 0);
+
         PlayerVaults plugin = PlayerVaults.getInstance();
         File expectedFolder = new File(plugin.getDataFolder().getParentFile(), "Bank");
         if (!expectedFolder.exists())
@@ -148,9 +168,41 @@ public class BankConverter implements Converter {
 
         File databaseFile = new File(expectedFolder, dbFileName);
         if (!databaseFile.exists())
-            return false; //todo: check version
+            return false;
 
-        return connect();
+        Plugin bankPlugin = plugin.getServer().getPluginManager().getPlugin("Bank");
+
+        boolean connected = connect();
+
+        if (!connected)
+            return false;
+
+        if (!overrideFurtherVersionChecks) {
+            if (bankPlugin == null || bankPlugin.getDescription() == null || bankPlugin.getDescription().getVersion() == null) {
+                conversionNotRecommendedMsg = "Could not confirm the version of the Bank plugin. Tested versions are: " +
+                        String.join(", ", testedBankVersions) +
+                        ". Run the command again if you want to proceed anyway.";
+            } else {
+                String bankPluginVersion = bankPlugin.getDescription().getVersion();
+                boolean bankPluginVersionWasTested = false;
+
+                for (String testedVersion : testedBankVersions) {
+                    if (bankPluginVersion.equals(testedVersion)) {
+                        bankPluginVersionWasTested = true;
+                        break;
+                    }
+                }
+
+                if (!bankPluginVersionWasTested) {
+                    conversionNotRecommendedMsg = "Bank plugin version " + bankPluginVersion +
+                            " has not been nested. Tested versions are: " +
+                            String.join(", ", testedBankVersions) +
+                            ". Run the command again if you want to proceed anyway.";
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override
