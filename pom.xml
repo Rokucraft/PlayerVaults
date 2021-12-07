@@ -96,9 +96,26 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>Maven Central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+<!--        Use maven to install patched Bank JAR in the local repo:
+.\bin\apache-maven-3.8.4\bin\mvn install:install-file "-Dfile=C:\Users\Naums\roku\Bank\build\libs\bank-plugin-lite-4.5.4-RELEASE-all.jar" "-DgroupId=me.dablakbandit.bank" "-DartifactId=BankPlugin" "-Dversion=4.5.4" "-Dpackaging=jar" "-DgeneratePom=true"
+-->
+        <dependency>
+            <groupId>me.dablakbandit.bank</groupId>
+            <artifactId>BankPlugin</artifactId>
+            <version>4.5.4</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
@@ -108,7 +125,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
-            <version>4.1.0-SNAPSHOT</version>
+            <version>4.2.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -129,10 +146,16 @@
             <version>0.9.1</version>
             <scope>compile</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.spigotmc</groupId>-->
+<!--            <artifactId>spigot-api</artifactId>-->
+<!--            <version>1.13.1-R0.1-SNAPSHOT</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.13.1-R0.1-SNAPSHOT</version>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -147,5 +170,18 @@
             <version>3.3.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.elmakers.mine.bukkit</groupId>
+            <artifactId>MagicAPI</artifactId>
+            <version>10.2</version>
+            <scope>provided</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>me.dablakbandit.bank</groupId>-->
+<!--            <artifactId>BankPlugin</artifactId>-->
+<!--            <version>4.5.4</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/lib/bank.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

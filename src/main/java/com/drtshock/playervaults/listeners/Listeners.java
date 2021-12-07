@@ -114,7 +114,7 @@ public class Listeners implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
-        Inventory clickedInventory = event.getClickedInventory();
+        Inventory clickedInventory = null; //event.getClickedInventory();
         if (clickedInventory != null) {
             VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
             if (info != null) {

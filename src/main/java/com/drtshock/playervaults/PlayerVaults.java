@@ -27,6 +27,7 @@ import com.drtshock.playervaults.commands.VaultCommand;
 import com.drtshock.playervaults.config.Loader;
 import com.drtshock.playervaults.config.file.Config;
 import com.drtshock.playervaults.config.file.Translation;
+import com.drtshock.playervaults.converters.BankConverter;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
@@ -254,6 +255,12 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         this.getLogger().info("Loaded! Took " + (System.currentTimeMillis() - start) + "ms");
+//        VaultManager vm = VaultManager.getInstance();
+//        UUID uuid = UUID.fromString("0a13e34d-292c-4fbe-89d3-a5b60923081c");
+//        vm.cachePlayerVaultFile(uuid.toString());
+//        OfflinePlayer player = this.getServer().getOfflinePlayer(uuid);
+//        Inventory inv = VaultManager.getInstance().loadOwnVault(player.getPlayer(), 1, VaultOperations.getMaxVaultSize(player));
+        new BankConverter().run(null);
     }
 
     private void metricsLine(String name, Callable<Integer> callable) {
