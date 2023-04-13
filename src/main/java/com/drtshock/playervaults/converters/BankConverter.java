@@ -55,9 +55,11 @@ public class BankConverter implements Converter {
         for (Map.Entry<UUID, Map<Integer, List<ItemStack>>> playerVaults : bankVaults.entrySet()) {
             UUID uuid = playerVaults.getKey();
 
+            int vaultNum = 1;
+
             for (Map.Entry<Integer, List<ItemStack>> bankVault : playerVaults.getValue().entrySet()) {
 
-                Integer vaultNum = bankVault.getKey();
+//                Integer vaultNum = bankVault.getKey();
                 List<ItemStack> bankVaultItems = bankVault.getValue();
 
                 if (bankVaultItems.size() == 0)
@@ -71,6 +73,8 @@ public class BankConverter implements Converter {
                 vault.addItem(bankVaultItems.toArray(new ItemStack[0]));
                 pvVaults.saveVault(vault, uuid.toString(), vaultNum);
                 savedAVault = true;
+
+                vaultNum += 1;
             }
 
             if (savedAVault)
